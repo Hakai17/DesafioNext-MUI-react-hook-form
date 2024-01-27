@@ -1,13 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   useForm,
   FormProvider,
   useFormContext,
   Controller,
 } from "react-hook-form";
-import { Autocomplete, TextField, Button, Container, Box } from "@mui/material";
+import {
+  Autocomplete,
+  TextField,
+  CircularProgress,
+  Button,
+  Container,
+  Box,
+} from "@mui/material";
 
 interface Pessoa {
   id: number;
@@ -20,14 +27,43 @@ const pessoas: Pessoa[] = [
   { id: 3, nome: "Paulo Felipe Castro" },
 ];
 
-const fetchData = async (searchTerm: string) => {
+const fetchData = async (searchTerm: string): Promise<readonly Pessoa[]> => {
   return pessoas.filter((pessoa) =>
     pessoa.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 };
 
+const debounce = (fn: (...args: any[]) => void, delay: number) => {
+  let timeoutId: NodeJS.Timeout;
+
+  return function (...args: any[]) {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+};
+
 const PessoaAutocomplete: React.FC = () => {
   const methods = useFormContext();
+  const [options, setOptions] = useState<readonly Pessoa[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const debouncedSearch = debounce(async (searchTerm: string) => {
+    setLoading(true);
+    try {
+      const newData = await fetchData(searchTerm);
+      setOptions(newData);
+    } finally {
+      setLoading(false);
+    }
+  }, 2000);
+
+  const handleSearch = (searchTerm: string) => {
+    setLoading(true);
+    debouncedSearch(searchTerm);
+  };
 
   return (
     <Controller
@@ -37,19 +73,26 @@ const PessoaAutocomplete: React.FC = () => {
       render={({ field }) => (
         <Autocomplete
           {...field}
-          options={pessoas}
+          options={options}
           isOptionEqualToValue={(option, value) => option.nome === value.nome}
           getOptionLabel={(option: Pessoa) => option.nome}
           onChange={(_, selectedOption) => field.onChange(selectedOption)}
+          loading={loading}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Pessoa"
               sx={{ width: "100%" }}
               value={field.value?.nome || ""}
-              onBlur={async () => {
-                const newData = await fetchData(field.value?.nome || "");
-                field.onChange(newData[0]);
+              onChange={(e) => handleSearch(e.target.value)}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading && <CircularProgress size={20} />}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
               }}
             />
           )}
