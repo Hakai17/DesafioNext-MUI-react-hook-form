@@ -28,9 +28,14 @@ const pessoas: Pessoa[] = [
 ];
 
 const fetchData = async (searchTerm: string): Promise<readonly Pessoa[]> => {
-  return pessoas.filter((pessoa) =>
-    pessoa.nome.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  try {
+    const response = await fetch(`/api/pessoas?searchTerm=${searchTerm}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erro ao buscar dados da API:", error);
+    return [];
+  }
 };
 
 const debounce = (fn: (...args: any[]) => void, delay: number) => {
