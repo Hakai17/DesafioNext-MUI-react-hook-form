@@ -1,0 +1,47 @@
+/* FormStyles.css */
+
+:root {
+  --primary-color: #3498db; /* Azul suave */
+  --secondary-color: #2ecc71; /* Verde suave */
+  --text-color: #333; /* Cor do texto principal */
+  --background-color: #ecf0f1; /* Cor de fundo suave */
+  --background-accent-color: #f5f6fa; /* Cor de fundo de destaque suave */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+}
+
+.container {
+  background-color: var(--background-accent-color);
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.autocompleteContainer {
+  margin-bottom: 20px;
+}
+
+.autocompleteTextField {
+  width: 100%;
+}
+
+.formTextField {
+  width: 100%;
+}
+
+.submitButton {
+  width: 50%;
+  margin-top: 20px;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: var(--secondary-color);
+}

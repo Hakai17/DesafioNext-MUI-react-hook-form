@@ -15,6 +15,7 @@ import {
   Container,
   Box,
 } from "@mui/material";
+import "./FormStyles.css";
 
 interface Pessoa {
   id: number;
@@ -87,6 +88,7 @@ const PessoaAutocomplete: React.FC = () => {
             <TextField
               {...params}
               label="Pessoa"
+              className="autocompleteTextField"
               sx={{ width: "100%" }}
               value={field.value?.nome || ""}
               onChange={(e) => handleSearch(e.target.value)}
@@ -115,7 +117,7 @@ const Form: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container className="container">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <PessoaAutocomplete />
@@ -125,7 +127,7 @@ const Form: React.FC = () => {
             control={methods.control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Telefone" sx={{ width: "100%" }} />
+              <TextField {...field} label="Telefone" className="formTextField" sx={{ width: "100%" }} />
             )}
           />
 
@@ -134,13 +136,14 @@ const Form: React.FC = () => {
             control={methods.control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="E-mail" sx={{ width: "100%" }} />
+              <TextField {...field} label="E-mail" className="formTextField" sx={{ width: "100%" }} />
             )}
           />
 
           <Box mt={2} width="100%" display="flex" justifyContent="center">
             <Button
               type="submit"
+              className="submitButton"
               variant="contained"
               sx={{ width: "50%", color: "black" }}
             >
